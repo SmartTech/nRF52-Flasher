@@ -1,0 +1,3 @@
+[submodule "nRF52-OpenOCD"]
+	path = nRF52-OpenOCD
+	url = https://github.com/SmartTech/nRF52-OpenOCD
