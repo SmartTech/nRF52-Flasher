@@ -194,7 +194,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>420</x>
       <y>150</y>
       <width>81</width>
       <height>81</height>
@@ -208,6 +208,45 @@
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>0</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Developed by: Silivanov D.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>10</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>d.silivanov@vega-absolute.ru</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>20</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>https://github.com/SmartTech/nRF52-Flasher</string>
     </property>
    </widget>
    <zorder>log</zorder>
@@ -225,6 +264,9 @@
    <zorder>console</zorder>
    <zorder>Btn_send</zorder>
    <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_4</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

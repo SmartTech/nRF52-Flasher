@@ -27,7 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+
+    this->setWindowTitle("nRF52-Flasher");
 
     // Init log
     textlog = ui->log;
@@ -125,21 +128,6 @@ void MainWindow::on_Btn_BOOT_clicked()
         check_files();
         infoLog() << ("Bootloader firmware: ") << QString(lastFileBOOT);
     }
-}
-
-void MainWindow::on_Refresh_SD_clicked()
-{
-
-}
-
-void MainWindow::on_Refresh_APP_clicked()
-{
-
-}
-
-void MainWindow::on_Refresh_BOOT_clicked()
-{
-
 }
 
 void MainWindow::on_btn_reset_clicked()

@@ -51,7 +51,7 @@ void FlashingThread::run()
             case NRF_EXECUTE_ERASE :
                 infoLog() << tr("Erasing device...");
                 if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; nrf52 mass_erase 0; shutdown;" }))
+                                    "init; reset halt; nrf52 mass_erase 0; shutdown;" }))
                 throw FlashingException(tr("Failed to erase device"));
                 infoLog() << tr("OK!");
             break;
@@ -75,20 +75,8 @@ void FlashingThread::run()
 
 bool FlashingThread::executeOpenOCD(QProcess* proc, const QStringList &args) throw(FlashingException)
 {
-    //proc->start("nRF52-OpenOCD/bin/openocd.exe", args);
-    proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/");
-    proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/openocd", args);
-
-
-    //QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    //env.insert("TMPDIR", "C:\\MyApp\\temp"); // Add an environment variable
-    //env.insert("PATH", env.value("Path") +
-    //           ";" + qApp->applicationDirPath() + "/nRF52-OpenOCD/bin;" +
-    //           qApp->applicationDirPath() + "/nRF52-OpenOCD/share/openocd/scripts");
-    //proc->setProcessEnvironment(env);
-    //
-    //proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/share/openocd/scripts");
-    //proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/openocd", args);
+    proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/");
+    proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/openocd", args);
 
     if (!proc->waitForStarted() || !proc->waitForFinished())
     {

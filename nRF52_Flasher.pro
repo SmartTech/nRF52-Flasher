@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++14
 
-TARGET = nRF52_Flasher
+TARGET = nRF52-Flasher
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -40,4 +40,17 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-DISTFILES +=
+DISTFILES += QT_DEPRECATED_WARNINGS
+
+
+win32:{
+    CONFIG += windows
+
+    RC_ICONS = images/logo.ico
+    QMAKE_TARGET_COMPANY = Vega-Absolute
+    QMAKE_TARGET_DESCRIPTION = nRF52-Flasher
+    QMAKE_TARGET_COPYRIGHT = Vega-Absolute
+    QMAKE_TARGET_PRODUCT = nRF52-Flasher
+    RC_LANG = 0x0419
+    RC_CODEPAGE = 0x04E3
+}
