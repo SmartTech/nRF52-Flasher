@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    this->setWindowTitle("nRF52-Flasher");
+    //this->setWindowTitle("nRF52-Flasher");
 
     // Init log
     textlog = ui->log;
