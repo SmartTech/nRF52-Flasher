@@ -70,10 +70,12 @@ bool MainWindow::check_files() {
     if(ui->File_SD->text().length() && ui->File_APP->text().length() && ui->File_BOOT->text().length()) {
         if(ui->File_SD->text().endsWith(".hex") && ui->File_APP->text().endsWith(".hex") && ui->File_BOOT->text().endsWith(".hex")) {
             ui->Btn_flash->setEnabled(true);
+            ui->Btn_flashErase->setEnabled(true);
             return true;
         }
     }
     ui->Btn_flash->setEnabled(false);
+    ui->Btn_flashErase->setEnabled(false);
     infoLog() << "Error in one or more file paths";
     return false;
 }
@@ -153,6 +155,14 @@ void MainWindow::on_Btn_flash_clicked()
     if(!check_files()) return;
     flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
     flasher->nrf_flash();
+    flasher->start();
+}
+
+void MainWindow::on_Btn_flashErase_clicked()
+{
+    if(!check_files()) return;
+    flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
+    flasher->nrf_flashErase();
     flasher->start();
 }
 

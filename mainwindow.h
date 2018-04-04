@@ -39,6 +39,8 @@ private slots:
     void on_Btn_flash_clicked();
     void on_Btn_erase_clicked();
 
+    void on_Btn_flashErase_clicked();
+
 private:
 
     Ui::MainWindow *ui;

@@ -18,6 +18,7 @@ enum {
     NRF_EXECUTE_RESET,
     NRF_EXECUTE_ERASE,
     NRF_EXECUTE_FLASH,
+    NRF_EXECUTE_FLASHERASE,
     NRF_EXECUTE_UNKNOWN
 };
 
@@ -49,6 +50,7 @@ public:
     void nrf_reset();
     void nrf_erase();
     void nrf_flash();
+    void nrf_flashErase();
 
 private:
 

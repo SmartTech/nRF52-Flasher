@@ -68,8 +68,15 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
     <property name="text">
      <string>SoftDevice</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/ble.png</normaloff>:/images/ble.png</iconset>
     </property>
    </widget>
    <widget class="QLineEdit" name="File_SD">
@@ -94,21 +101,25 @@
     <property name="text">
      <string>Erase All</string>
     </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/erase.png</normaloff>:/images/erase.png</iconset>
+    </property>
    </widget>
-   <widget class="QPushButton" name="Btn_flash">
+   <widget class="QPushButton" name="Btn_flashErase">
     <property name="enabled">
      <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>210</x>
       <y>430</y>
       <width>211</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Flash</string>
+     <string>Erase and Flash</string>
     </property>
     <property name="icon">
      <iconset resource="resources.qrc">
@@ -124,8 +135,18 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="text">
      <string>Application</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/firmware.png</normaloff>:/images/firmware.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="Btn_BOOT">
@@ -137,8 +158,15 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
     <property name="text">
      <string>Bootloader</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/bootloader.png</normaloff>:/images/bootloader.png</iconset>
     </property>
    </widget>
    <widget class="QLineEdit" name="File_APP">
@@ -173,6 +201,10 @@
     <property name="text">
      <string>Halt</string>
     </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/halt.png</normaloff>:/images/halt.png</iconset>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_reset">
     <property name="geometry">
@@ -186,6 +218,10 @@
     <property name="text">
      <string>Reset</string>
     </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/reset.png</normaloff>:/images/reset.png</iconset>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_run">
     <property name="geometry">
@@ -198,6 +234,10 @@
     </property>
     <property name="text">
      <string>Run</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/run.png</normaloff>:/images/run.png</iconset>
     </property>
    </widget>
    <widget class="QTextEdit" name="log">
@@ -234,6 +274,10 @@
     </property>
     <property name="text">
      <string>Send</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/console.png</normaloff>:/images/console.png</iconset>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -307,11 +351,31 @@
      <string>v.1.0</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="Btn_flash">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>430</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Flash</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/upload.png</normaloff>:/images/upload.png</iconset>
+    </property>
+   </widget>
    <zorder>log</zorder>
    <zorder>Btn_SD</zorder>
    <zorder>File_SD</zorder>
    <zorder>Btn_erase</zorder>
-   <zorder>Btn_flash</zorder>
+   <zorder>Btn_flashErase</zorder>
    <zorder>Btn_APP</zorder>
    <zorder>Btn_BOOT</zorder>
    <zorder>File_APP</zorder>
@@ -326,6 +390,7 @@
    <zorder>label_3</zorder>
    <zorder>label_4</zorder>
    <zorder>label_5</zorder>
+   <zorder>Btn_flash</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

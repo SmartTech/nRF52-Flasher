@@ -57,9 +57,15 @@ void FlashingThread::run()
             break;
             case NRF_EXECUTE_FLASH :
                 infoLog() << tr("Start flashing device...");
-                infoLog() << pathSD;
                 if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; program \"" + QString(pathSD) + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
+                                    "init; program \"" + pathSD + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
+                throw FlashingException(tr("Failed to erase device"));
+                infoLog() << tr("Device programmed!");
+            break;
+            case NRF_EXECUTE_FLASHERASE :
+                infoLog() << tr("Start flashing device with erase...");
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; nrf52 mass_erase 0; sleep 500; program \"" + pathSD + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
                 throw FlashingException(tr("Failed to erase device"));
                 infoLog() << tr("Device programmed!");
             break;
@@ -138,4 +144,9 @@ void FlashingThread::nrf_erase()
 void FlashingThread::nrf_flash()
 {
     executeType = NRF_EXECUTE_FLASH;
+}
+
+void FlashingThread::nrf_flashErase()
+{
+    executeType = NRF_EXECUTE_FLASHERASE;
 }

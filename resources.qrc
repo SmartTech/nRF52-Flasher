@@ -5,5 +5,12 @@
         <file>images/upload.png</file>
         <file>images/erase.png</file>
         <file>images/logo.png</file>
+        <file>images/ble.png</file>
+        <file>images/bootloader.png</file>
+        <file>images/console.png</file>
+        <file>images/firmware.png</file>
+        <file>images/halt.png</file>
+        <file>images/reset.png</file>
+        <file>images/run.png</file>
     </qresource>
 </RCC>
