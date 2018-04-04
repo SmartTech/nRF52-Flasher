@@ -25,8 +25,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-signals:
-    void addToLog(const QString& str);
 
 private slots:
 
@@ -63,7 +61,9 @@ private:
     QString lastPathSD, lastPathAPP, lastPathBOOT;
     QString lastFileSD, lastFileAPP, lastFileBOOT;
 
-    void check_files();
+    void closeEvent(QCloseEvent *event) override;
+
+    bool check_files();
 };
 
 #endif // MAINWINDOW_H

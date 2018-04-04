@@ -1,5 +1,4 @@
-
-#include <QProcess>
+#include <QCoreApplication>
 
 #include "flashingthread.h"
 
@@ -33,17 +32,36 @@ void FlashingThread::run()
         proc->setReadChannelMode(QProcess::MergedChannels);
         proc->setReadChannel(QProcess::StandardOutput);
         connect(proc.get(), SIGNAL(readyRead()), SLOT(readOutput()));
+        connect(proc.get(), &QProcess::errorOccurred, this, &FlashingThread::errorOccurred);
 
         switch(executeType)
         {
             case NRF_EXECUTE_RESET :
                 infoLog() << tr("Resetting device...");
-                //if (!executeOpenOCD(proc.get(), {"-f openocd.cfg", "-c" + '"' + "init; reset; shutdown" + '"' }))
-                if (!executeOpenOCD(proc.get(), {"-f openocd.cfg", "-c \"init; reset; shutdown;\"" }))
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; reset; shutdown;" }))
                 throw FlashingException(tr("Failed to RESET device"));
             break;
+            case NRF_EXECUTE_HALT :
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; halt; shutdown;" }))
+                throw FlashingException(tr("Failed to HALT device"));
+                infoLog() << tr("Device halted");
+            break;
+            case NRF_EXECUTE_ERASE :
+                infoLog() << tr("Erasing device...");
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; nrf52 mass_erase 0; shutdown;" }))
+                throw FlashingException(tr("Failed to erase device"));
+                infoLog() << tr("OK!");
+            break;
             case NRF_EXECUTE_FLASH :
-
+                infoLog() << tr("Start flashing device...");
+                infoLog() << pathSD;
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; program \"" + QString(pathSD) + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
+                throw FlashingException(tr("Failed to erase device"));
+                infoLog() << tr("Device programmed!");
             break;
             default: infoLog() << tr("Unknown command"); break;
         }
@@ -57,11 +75,25 @@ void FlashingThread::run()
 
 bool FlashingThread::executeOpenOCD(QProcess* proc, const QStringList &args) throw(FlashingException)
 {
-    proc->start("nRF52-OpenOCD/bin/openocd", args);
-    if (!proc->waitForFinished())
+    //proc->start("nRF52-OpenOCD/bin/openocd.exe", args);
+    proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/");
+    proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/openocd", args);
+
+
+    //QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    //env.insert("TMPDIR", "C:\\MyApp\\temp"); // Add an environment variable
+    //env.insert("PATH", env.value("Path") +
+    //           ";" + qApp->applicationDirPath() + "/nRF52-OpenOCD/bin;" +
+    //           qApp->applicationDirPath() + "/nRF52-OpenOCD/share/openocd/scripts");
+    //proc->setProcessEnvironment(env);
+    //
+    //proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/share/openocd/scripts");
+    //proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/bin/openocd", args);
+
+    if (!proc->waitForStarted() || !proc->waitForFinished())
     {
         proc->terminate();
-        throw FlashingException(tr("OpenOCD %1 is too long run").arg(args.join(' ')));
+        throw FlashingException(tr("OpenOCD %1 is too long run: %2").arg(args.join(' ')).arg(proc->errorString()));
     }
 
     if (proc->exitCode() != 0)
@@ -87,6 +119,12 @@ void FlashingThread::readOutput()
         }
     }
 }
+
+void FlashingThread::errorOccurred(QProcess::ProcessError error)
+{
+    auto proc = static_cast<QProcess*>(sender());
+    qCritical() << error << proc->errorString();
+ }
 
 
 void FlashingThread::nrf_run()

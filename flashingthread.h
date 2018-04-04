@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QDebug>
+#include <QProcess>
 
 
 #define debugLog     qDebug().noquote
@@ -63,6 +64,7 @@ private:
 private slots:
 
     void readOutput();
+    void errorOccurred(QProcess::ProcessError error);
 
 };
 

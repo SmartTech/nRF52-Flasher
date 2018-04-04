@@ -5,10 +5,12 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QSettings>
+#include <QTextEdit>
 #include <QProcess>
 
+#include <iostream>
 
-MainWindow* obj = nullptr;
+QTextEdit *textlog = nullptr;
 
 #define MESSAGE_PATTERN "<span style=\"color: #" \
     "%{if-debug}808080%{endif}%{if-info}003153%{endif}%{if-warning}ffb300%{endif}%{if-critical}f80000%{endif}%{if-fatal}8f000a%{endif}" \
@@ -16,7 +18,8 @@ MainWindow* obj = nullptr;
 
 void logHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &str)
 {
-    if (obj) obj->addToLog( qFormatLogMessage(type, ctx, str) );
+    QMetaObject::invokeMethod(textlog, "append", Qt::QueuedConnection, Q_ARG(QString, str));
+    //if (obj) obj->addToLog( qFormatLogMessage(type, ctx, str) );
     qt_message_output(type, ctx, str);
 }
 
@@ -27,18 +30,32 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Init log
-    connect(this, SIGNAL(addToLog(QString)), ui->log, SLOT(append(QString)), Qt::QueuedConnection);
+    textlog = ui->log;
+    // connect(this, SIGNAL(addToLog(QString)), ui->log, SLOT(append(QString)), Qt::QueuedConnection);
     qInstallMessageHandler(logHandler);
     if (!qEnvironmentVariableIsSet("QT_MESSAGE_PATTERN"))
         qSetMessagePattern(MESSAGE_PATTERN);
-    addToLog("=======================");
-    addToLog("'nRF52 FLASHER' v" + QString(FLASHER_VERSION));
-    addToLog("---------------------------------------------");
-    addToLog("Vega-Absolute, 2018");
-    addToLog("=======================\r\n");
+    qInfo() << "=======================";
+    qInfo() << "'nRF52 FLASHER' v" + QString(FLASHER_VERSION);
+    qInfo() << "---------------------------------------------";
+    qInfo() << "Vega-Absolute, 2018";
+    qInfo() << "=======================\r\n";
 
     // Init flasher thread
     flasher.reset(new FlashingThread);
+
+    // Load last params
+    QSettings s;
+    lastPathSD   = s.value("LastPathSD",   QDir::homePath()).toString();
+    lastPathAPP  = s.value("LastPathAPP",  QDir::homePath()).toString();
+    lastPathBOOT = s.value("LastPathBOOT", QDir::homePath()).toString();
+    lastFileSD   = s.value("LastFileSD").toString();
+    lastFileAPP  = s.value("LastFileAPP").toString();
+    lastFileBOOT = s.value("LastFileBOOT").toString();
+    ui->File_SD->setText(lastFileSD);
+    ui->File_APP->setText(lastFileAPP);
+    ui->File_BOOT->setText(lastFileBOOT);
+    check_files();
 }
 
 MainWindow::~MainWindow()
@@ -46,54 +63,67 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::check_files() {
+bool MainWindow::check_files() {
     if(ui->File_SD->text().length() && ui->File_APP->text().length() && ui->File_BOOT->text().length()) {
-        ui->Btn_flash->setEnabled(true);
+        if(ui->File_SD->text().endsWith(".hex") && ui->File_APP->text().endsWith(".hex") && ui->File_BOOT->text().endsWith(".hex")) {
+            ui->Btn_flash->setEnabled(true);
+            return true;
+        }
     }
+    ui->Btn_flash->setEnabled(false);
+    infoLog() << "Error in one or more file paths";
+    return false;
 }
 
 void MainWindow::on_Btn_SD_clicked()
 {
-    auto fileName = QFileDialog::getOpenFileName(this,
+    lastFileSD = QFileDialog::getOpenFileName(this,
                     tr("Open SoftDevice Firmware"), lastPathSD, tr("Firmware Files (*.hex)"));
-    if (!fileName.isNull())
+    if (!lastFileSD.isNull())
     {
-        QFileInfo fi(fileName);
+        QFileInfo fi(lastFileSD);
         lastPathSD = fi.absolutePath();
         QSettings s;
         s.setValue("LastPathSD", lastPathSD);
-        ui->File_SD->setText(fileName);
+        s.setValue("LastFileSD", lastFileSD);
+        ui->File_SD->setText(lastFileSD);
         check_files();
+        infoLog() << ("SoftDevice firmware: ") << QString(lastFileSD);
     }
+
 }
 
 void MainWindow::on_Btn_APP_clicked()
 {
-    auto fileName = QFileDialog::getOpenFileName(this,
-                    tr("Open Application Firmware"), lastPathSD, tr("Firmware Files (*.hex)"));
-    if (!fileName.isNull())
+    lastFileAPP = QFileDialog::getOpenFileName(this,
+                    tr("Open Application Firmware"), lastPathAPP, tr("Firmware Files (*.hex)"));
+    if (!lastFileAPP.isNull())
     {
-        QFileInfo fi(fileName);
+        QFileInfo fi(lastFileAPP);
         lastPathAPP = fi.absolutePath();
         QSettings s;
         s.setValue("LastPathAPP", lastPathAPP);
-        ui->File_APP->setText(fileName);
+        s.setValue("LastFileAPP", lastFileAPP);
+        ui->File_APP->setText(lastFileAPP);
         check_files();
+        infoLog() << ("Application firmware: ") << QString(lastFileAPP);
     }
 }
 
 void MainWindow::on_Btn_BOOT_clicked()
 {
-    auto fileName = QFileDialog::getOpenFileName(this,
-                    tr("Open Bootloader Firmware"), lastPathSD, tr("Firmware Files (*.hex)"));
-    if (!fileName.isNull())
+    lastFileBOOT = QFileDialog::getOpenFileName(this,
+                    tr("Open Bootloader Firmware"), lastPathBOOT, tr("Firmware Files (*.hex)"));
+    if (!lastFileBOOT.isNull())
     {
-        QFileInfo fi(fileName);
+        QFileInfo fi(lastFileBOOT);
         lastPathBOOT = fi.absolutePath();
         QSettings s;
-        s.setValue("LastPathSD", lastPathBOOT);
-        ui->File_BOOT->setText(fileName);
+        s.setValue("LastPathBOOT", lastPathBOOT);
+        s.setValue("LastFileBOOT", lastFileBOOT);
+        ui->File_BOOT->setText(lastFileBOOT);
         check_files();
+        infoLog() << ("Bootloader firmware: ") << QString(lastFileBOOT);
     }
 }
 
@@ -132,7 +162,9 @@ void MainWindow::on_btn_run_clicked()
 
 void MainWindow::on_Btn_flash_clicked()
 {
+    if(!check_files()) return;
     flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
+    flasher->nrf_flash();
     flasher->start();
 }
 
@@ -145,4 +177,18 @@ void MainWindow::on_Btn_erase_clicked()
 void MainWindow::on_Btn_send_clicked()
 {
 
+}
+
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QSettings s;
+    s.setValue("LastPathSD",   lastPathSD);
+    s.setValue("LastPathAPP",  lastPathAPP);
+    s.setValue("LastPathBOOT", lastPathBOOT);
+    s.setValue("LastFileSD",   lastFileSD);
+    s.setValue("LastFileAPP",  lastFileAPP);
+    s.setValue("LastFileBOOT", lastFileBOOT);
+
+    QMainWindow::closeEvent(event);
 }

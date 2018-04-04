@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>533</width>
-    <height>517</height>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="Btn_SD">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>420</x>
       <y>50</y>
       <width>101</width>
       <height>23</height>
@@ -32,7 +32,7 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>371</width>
+      <width>401</width>
       <height>20</height>
      </rect>
     </property>
@@ -73,7 +73,7 @@
    <widget class="QPushButton" name="Btn_APP">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>420</x>
       <y>80</y>
       <width>101</width>
       <height>23</height>
@@ -86,7 +86,7 @@
    <widget class="QPushButton" name="Btn_BOOT">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>420</x>
       <y>110</y>
       <width>101</width>
       <height>23</height>
@@ -101,7 +101,7 @@
      <rect>
       <x>10</x>
       <y>80</y>
-      <width>371</width>
+      <width>401</width>
       <height>20</height>
      </rect>
     </property>
@@ -111,60 +111,9 @@
      <rect>
       <x>10</x>
       <y>110</y>
-      <width>371</width>
+      <width>401</width>
       <height>20</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Refresh_SD">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>50</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="resources.qrc">
-      <normaloff>:/images/sync.png</normaloff>:/images/sync.png</iconset>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Refresh_APP">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>80</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="resources.qrc">
-      <normaloff>:/images/sync.png</normaloff>:/images/sync.png</iconset>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Refresh_BOOT">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>110</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="resources.qrc">
-      <normaloff>:/images/sync.png</normaloff>:/images/sync.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_halt">
@@ -270,33 +219,12 @@
    <zorder>Btn_BOOT</zorder>
    <zorder>File_APP</zorder>
    <zorder>File_BOOT</zorder>
-   <zorder>Refresh_SD</zorder>
-   <zorder>Refresh_APP</zorder>
-   <zorder>Refresh_BOOT</zorder>
    <zorder>btn_halt</zorder>
    <zorder>btn_reset</zorder>
    <zorder>btn_run</zorder>
    <zorder>console</zorder>
    <zorder>Btn_send</zorder>
    <zorder>label</zorder>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>533</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
