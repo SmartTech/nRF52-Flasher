@@ -281,10 +281,13 @@
     </property>
    </widget>
    <widget class="QLabel" name="label">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>150</y>
+      <x>430</x>
+      <y>280</y>
       <width>81</width>
       <height>81</height>
      </rect>
@@ -293,7 +296,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="resources.qrc">:/images/logo.png</pixmap>
+     <pixmap resource="resources.qrc">:/images/vega-logo.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -348,7 +351,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>v.1.0</string>
+     <string>v.1.1</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Btn_flash">
@@ -371,6 +374,50 @@
       <normaloff>:/images/upload.png</normaloff>:/images/upload.png</iconset>
     </property>
    </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>360</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/images/vega-name.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>150</y>
+      <width>81</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/images/logo.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
    <zorder>log</zorder>
    <zorder>Btn_SD</zorder>
    <zorder>File_SD</zorder>
@@ -391,6 +438,8 @@
    <zorder>label_4</zorder>
    <zorder>label_5</zorder>
    <zorder>Btn_flash</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

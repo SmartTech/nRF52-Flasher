@@ -38,13 +38,11 @@ void FlashingThread::run()
         {
             case NRF_EXECUTE_RESET :
                 infoLog() << tr("Resetting device...");
-                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; reset; shutdown;" }))
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c", "init; reset; shutdown;"}))
                 throw FlashingException(tr("Failed to RESET device"));
             break;
             case NRF_EXECUTE_HALT :
-                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; halt; shutdown;" }))
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c", "init; halt; shutdown;" }))
                 throw FlashingException(tr("Failed to HALT device"));
                 infoLog() << tr("Device halted");
             break;
@@ -58,15 +56,16 @@ void FlashingThread::run()
             case NRF_EXECUTE_FLASH :
                 infoLog() << tr("Start flashing device...");
                 if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; program \"" + pathSD + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
+                                    "init; reset halt; program " + pathSD + "; program " + pathAPP + "; program " + pathBOOT + "; reset; shutdown;" }))
                 throw FlashingException(tr("Failed to erase device"));
                 infoLog() << tr("Device programmed!");
             break;
             case NRF_EXECUTE_FLASHERASE :
                 infoLog() << tr("Start flashing device with erase...");
                 if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
-                                    "init; nrf52 mass_erase 0; sleep 500; program \"" + pathSD + "\";program \"" + pathAPP + "\";program \"" + pathBOOT + "\";reset;shutdown;" }))
-                throw FlashingException(tr("Failed to erase device"));
+                                    "init; reset halt; nrf52 mass_erase 0; sleep 500; program " + pathSD + " verify; sleep 500; program " + pathAPP + " verify; sleep 500; program " + pathBOOT + " verify; reset; shutdown;" }))
+                                    //"init; reset halt; nrf52 mass_erase 0; sleep 500; program firmware/s140.hex verify; program firmware/app.hex verify; program firmware/bootloader.hex verify; reset; shutdown"
+                    throw FlashingException(tr("Failed to erase device"));
                 infoLog() << tr("Device programmed!");
             break;
             default: infoLog() << tr("Unknown command"); break;
@@ -83,12 +82,18 @@ bool FlashingThread::executeOpenOCD(QProcess* proc, const QStringList &args) thr
 {
     proc->setWorkingDirectory(qApp->applicationDirPath() + "/nRF52-OpenOCD/");
     proc->start(qApp->applicationDirPath() + "/nRF52-OpenOCD/openocd", args);
+    qDebug() << args;
 
     if (!proc->waitForStarted() || !proc->waitForFinished())
     {
         proc->terminate();
         throw FlashingException(tr("OpenOCD %1 is too long run: %2").arg(args.join(' ')).arg(proc->errorString()));
     }
+
+    //while(proc -> waitForReadyRead(3000)) {}
+    //if(proc -> bytesAvailable()) {
+    //    qDebug() << proc->readAllStandardOutput().constData();
+    //}
 
     if (proc->exitCode() != 0)
         throw FlashingException(proc->readAllStandardError());
@@ -99,19 +104,22 @@ bool FlashingThread::executeOpenOCD(QProcess* proc, const QStringList &args) thr
 
 void FlashingThread::readOutput()
 {
-    auto proc = static_cast<QProcess*>(sender());
-    QByteArray buffer;
-    QList<QByteArray> lines;
-    while (proc && proc->bytesAvailable())
-    {
-        buffer = proc->readAll();
-        buffer.replace('\r', nullptr);
-        lines = buffer.split('\n');
-        for (const QByteArray& line: lines)
-        {
-            qDebug() << line.constData();
-        }
-    }
+    auto proc = qobject_cast<QProcess*>(sender());
+    if (!proc) return;
+    qDebug() << proc->readAll().constData();
+    //auto proc = static_cast<QProcess*>(sender());
+    //QByteArray buffer;
+    //QList<QByteArray> lines;
+    //while (proc && proc->bytesAvailable())
+    //{
+    //    buffer = proc->readAll();
+    //    buffer.replace('\r', nullptr);
+    //    lines = buffer.split('\n');
+    //    for (const QByteArray& line: lines)
+    //    {
+    //        qDebug() << line.constData();
+    //    }
+    //}
 }
 
 void FlashingThread::errorOccurred(QProcess::ProcessError error)

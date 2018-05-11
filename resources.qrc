@@ -12,5 +12,7 @@
         <file>images/halt.png</file>
         <file>images/reset.png</file>
         <file>images/run.png</file>
+        <file>images/vega-logo.png</file>
+        <file>images/vega-name.png</file>
     </qresource>
 </RCC>
