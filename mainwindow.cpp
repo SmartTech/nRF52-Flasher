@@ -59,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->File_APP->setText(lastFileAPP);
     ui->File_BOOT->setText(lastFileBOOT);
     check_files();
+    check_file_SD();
+    check_file_APP();
+    check_file_BOOT();
 }
 
 MainWindow::~MainWindow()
@@ -77,6 +80,33 @@ bool MainWindow::check_files() {
     ui->Btn_flash->setEnabled(false);
     ui->Btn_flashErase->setEnabled(false);
     infoLog() << "Error in one or more file paths";
+    return false;
+}
+
+bool MainWindow::check_file_SD() {
+    if(ui->File_SD->text().length() && ui->File_SD->text().endsWith(".hex")) {
+        ui->Btn_flash_SD->setEnabled(true);
+        return true;
+    }
+    ui->Btn_flash_SD->setEnabled(false);
+    return false;
+}
+
+bool MainWindow::check_file_APP() {
+    if(ui->File_APP->text().length() && ui->File_APP->text().endsWith(".hex")) {
+        ui->Btn_flash_APP->setEnabled(true);
+        return true;
+    }
+    ui->Btn_flash_APP->setEnabled(false);
+    return false;
+}
+
+bool MainWindow::check_file_BOOT() {
+    if(ui->File_BOOT->text().length() && ui->File_BOOT->text().endsWith(".hex")) {
+        ui->Btn_flash_BOOT->setEnabled(true);
+        return true;
+    }
+    ui->Btn_flash_BOOT->setEnabled(false);
     return false;
 }
 
@@ -154,7 +184,33 @@ void MainWindow::on_Btn_flash_clicked()
 {
     if(!check_files()) return;
     flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
-    flasher->nrf_flash();
+    flasher->nrf_flash_all();
+    flasher->start();
+}
+
+void MainWindow::on_Btn_flash_SD_clicked()
+{
+    if(!check_file_SD()) return;
+    flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
+    flasher->nrf_flash_sd();
+    flasher->start();
+}
+
+
+void MainWindow::on_Btn_flash_APP_clicked()
+{
+    if(!check_file_APP()) return;
+    flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
+    flasher->nrf_flash_app();
+    flasher->start();
+}
+
+
+void MainWindow::on_Btn_flash_BOOT_clicked()
+{
+    if(!check_file_BOOT()) return;
+    flasher->setPath(lastFileSD, lastFileAPP, lastFileBOOT);
+    flasher->nrf_flash_boot();
     flasher->start();
 }
 

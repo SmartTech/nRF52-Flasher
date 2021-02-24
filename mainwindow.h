@@ -41,6 +41,10 @@ private slots:
 
     void on_Btn_flashErase_clicked();
 
+    void on_Btn_flash_SD_clicked();
+    void on_Btn_flash_APP_clicked();
+    void on_Btn_flash_BOOT_clicked();
+
 private:
 
     Ui::MainWindow *ui;
@@ -53,6 +57,9 @@ private:
     void closeEvent(QCloseEvent *event) override;
 
     bool check_files();
+    bool check_file_SD();
+    bool check_file_APP();
+    bool check_file_BOOT();
 };
 
 #endif // MAINWINDOW_H

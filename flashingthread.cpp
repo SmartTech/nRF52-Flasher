@@ -53,11 +53,32 @@ void FlashingThread::run()
                 throw FlashingException(tr("Failed to erase device"));
                 infoLog() << tr("OK!");
             break;
-            case NRF_EXECUTE_FLASH :
-                infoLog() << tr("Start flashing device...");
+            case NRF_EXECUTE_FLASH_ALL :
+                infoLog() << tr("Start flashing ALL to device...");
                 if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
                                     "init; reset halt; program " + pathSD + "; program " + pathAPP + "; program " + pathBOOT + "; reset; shutdown;" }))
                 throw FlashingException(tr("Failed to erase device"));
+                infoLog() << tr("Device programmed!");
+            break;
+            case NRF_EXECUTE_FLASH_SD :
+                infoLog() << tr("Start flashing SD to device...");
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; reset halt; program " + pathSD }))
+                throw FlashingException(tr("Failed to programm device"));
+                infoLog() << tr("Device programmed!");
+            break;
+            case NRF_EXECUTE_FLASH_APP :
+                infoLog() << tr("Start flashing APP to device...");
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; reset halt; program " + pathAPP }))
+                throw FlashingException(tr("Failed to programm device"));
+                infoLog() << tr("Device programmed!");
+            break;
+            case NRF_EXECUTE_FLASH_BOOT :
+                infoLog() << tr("Start flashing BOOT to device...");
+                if (!executeOpenOCD(proc.get(), {"-f", "openocd.cfg", "-c",
+                                    "init; reset halt; program " + pathBOOT }))
+                throw FlashingException(tr("Failed to programm device"));
                 infoLog() << tr("Device programmed!");
             break;
             case NRF_EXECUTE_FLASHERASE :
@@ -149,9 +170,24 @@ void FlashingThread::nrf_erase()
     executeType = NRF_EXECUTE_ERASE;
 }
 
-void FlashingThread::nrf_flash()
+void FlashingThread::nrf_flash_all()
 {
-    executeType = NRF_EXECUTE_FLASH;
+    executeType = NRF_EXECUTE_FLASH_ALL;
+}
+
+void FlashingThread::nrf_flash_sd()
+{
+    executeType = NRF_EXECUTE_FLASH_SD;
+}
+
+void FlashingThread::nrf_flash_app()
+{
+    executeType = NRF_EXECUTE_FLASH_APP;
+}
+
+void FlashingThread::nrf_flash_boot()
+{
+    executeType = NRF_EXECUTE_FLASH_BOOT;
 }
 
 void FlashingThread::nrf_flashErase()

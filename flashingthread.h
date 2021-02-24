@@ -17,7 +17,10 @@ enum {
     NRF_EXECUTE_HALT,
     NRF_EXECUTE_RESET,
     NRF_EXECUTE_ERASE,
-    NRF_EXECUTE_FLASH,
+    NRF_EXECUTE_FLASH_SD,
+    NRF_EXECUTE_FLASH_APP,
+    NRF_EXECUTE_FLASH_BOOT,
+    NRF_EXECUTE_FLASH_ALL,
     NRF_EXECUTE_FLASHERASE,
     NRF_EXECUTE_UNKNOWN
 };
@@ -49,7 +52,10 @@ public:
     void nrf_halt();
     void nrf_reset();
     void nrf_erase();
-    void nrf_flash();
+    void nrf_flash_all();
+    void nrf_flash_sd();
+    void nrf_flash_app();
+    void nrf_flash_boot();
     void nrf_flashErase();
 
 private:
